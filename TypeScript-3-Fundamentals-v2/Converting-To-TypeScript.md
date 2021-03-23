@@ -78,5 +78,20 @@ the whole purpose of using TS.
 -- Conversion should be done on a case-by-case basis. Consider the size and scope of a project
 before deciding to (or not to) convert it to TS. In many cases, conversion is worth the time. 
 
-# Address Book Exercise Notes
+# Address Book Exercise - Notes
 - Moving on to Address Book exercise, under /challenges/address-book.
+-- Goal is to follow the conversion steps listed above; convert the AddressBook class in 
+the index.js file from JS to TS. 
+-- Start by just changing the file extension. 
+-- Set the TS compiler in a loose mode, get the tests passing. 
+-- REMEMBER: Always make sure tests are passing *before* and *after* you are done with each step. 
+--- Might seem redundant on paper, but it's never a bad idea to double and triple-check your work. 
+-- To run tests: 
+` `
+   => cd ../address-book
+   => yarn test
+   14 out of 14 should be passing, if everything is set up correctly. 
+` `
+
+# Address Book Exercise - Solution Notes
+- 
