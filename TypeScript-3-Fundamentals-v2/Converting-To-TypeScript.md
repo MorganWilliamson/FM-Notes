@@ -94,4 +94,25 @@ the index.js file from JS to TS.
 ` `
 
 # Address Book Exercise - Solution Notes
-- 
+- In the getFullName function:
+` contact: {firstName?: string `
+-- Mike notes that `contact` should most likely be an object made up of first, middle,
+and last name. Each type should be set to a string, which may be obvious. On top of this,
+he also notes that we're filtering later in the function based on a Boolean, meaning that
+somewhere in the function we're dealing with truthiness. 
+-- Reminder: to make a *param optional*, you can drop a `?` after the param name. In the
+snippet above, `firstName?:` will allow the function to continue with or without a first
+name being input. (The same thing applies to middle and last name.)
+- Utilizing an interface: 
+-- Mike notes that we're reusing certain variables repeatedly, and could be better off
+(more DRY) by creating an interface to hold them instead. EX: 
+` `
+    interface Person { 
+        firstName?: string, 
+        middleName?: string, 
+        lastName?: string 
+    }
+` `
+-- We can then input `Person` in place as our type for a few of the functions. Keep in
+mind that this may cause some slight constraint; while it's may be simpler to do it
+this way, it's not guaranteed to be the best method. 
