@@ -58,3 +58,40 @@ function startTuple<T>(a: T) {
 }
 const myTuple = startTuple(["first"])(42);
 ```
+
+# Use Cases
+- When should you use generics?
+-- First off, Mike cautions treading carefully with usage of generics and with
+information regarding the use of generics. One misleading article (even if it's 
+unintentional) can cause a whole host of chaos in a codebase. 
+-- Generics are great for relating two things. "I take in an array of T, and give
+you back a dictionary of T." The generic is waht ties the two together. 
+-- "You can *always* eliminate a type parameter that's only used once." 
+--- ***BAD EX:***
+```ts
+ interface Shape {
+  draw();
+}
+interface Circle extends Shape {
+  radius: number;
+}
+
+function drawShapes1<S extends Shape>(shapes: S[]) {
+  shapes.forEach(s => s.draw());
+}
+```
+--- ***GOOD EX:***
+```ts
+function drawShapes2(shapes: Shape[]) {
+  // this is simpler. Above type param is not necessary
+  shapes.forEach(s => s.draw());
+}
+```
+-- "Constraints on type parameters are equivalent to specifying the type on an
+argument, in that it dictates what you can do within the function on S, right?"
+--- To simplify: applying a constraint in the above example is what gives us 
+access to "draw" in `s.draw()` on line 87.
+-- It may also be worth noting that both examples above compile to the exact 
+same thing; aside from syntax and the names of the functions, both are the exact
+same. `drawShapes2` gives us the same functionality, in a more compact package. 
+--- Essentially, the first example isn't *bad*, but it's not the best use case. 
