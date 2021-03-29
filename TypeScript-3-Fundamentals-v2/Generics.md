@@ -95,3 +95,36 @@ access to "draw" in `s.draw()` on line 87.
 same thing; aside from syntax and the names of the functions, both are the exact
 same. `drawShapes2` gives us the same functionality, in a more compact package. 
 --- Essentially, the first example isn't *bad*, but it's not the best use case. 
+
+# Dictionary Exercise
+- Goal: Create functionality for map and reduce usage on dictionaries. 
+-- With `[k: string]: T;`: `k` represents our dictionary's keys, but this can be
+named whatever we want. Similar to `T`, it's just meant to work as a placeholder. 
+-- There's always the possibility of an item being undefined. We could make it 
+optional with `[k: string]?:`, but there's a little extra work involved to get it
+functioning.
+
+<!-- Map Function -->
+```ts
+export function mapDict<T, S>(
+    dict: Dict<T>, 
+    fn: (arg: T, idx: number) => S): Dict<S> {
+    const out: Dict<S> = {};
+    Object.keys(dict).forEach((dKey, idx) => {
+        const thisItem = dict[dKey]
+        if (typeof thisItem != "undefined") {
+            out[dKey] = fn(thisItem, idx)
+        }
+    })
+    return out
+}
+
+// Using the function
+mapDict({ 
+    a: 'a', 
+    b: 'b'
+}, (str) => ({ val: str }))
+```
+-- Notice that when we go to use the function, we're not having to specify the
+types for a/b. TS knows that they're supposed to be strings, because we've already 
+built that portion in with the function itself. 
