@@ -131,3 +131,55 @@ to discourage people, draw a clear line in the sand.
 done in one place. Don't brand in multiple areas, unbrand in multiple other areas.
 Keep it all collected, concise, and consistent. You'll thank yourself later. 
 
+# Bottom Types
+- While Top Types can hold any value, Bottom Types can hold **no** values.
+-- One of the most common bottom types would be `never`. EX:
+```ts
+let n: never = 4;
+```
+-- A `never`, like all other bottom types, can't hold a value. As such, TS would
+give an error for the above line of code. n cannot be set to 4, because 4 is a 
+value. 
+-- A common place that you'll find a never is in the process of thoroughly 
+narrowing. EX: 
+```ts
+let x = "abc" as string | number;
+
+if (typeof x === "string") {
+  // x is a string here
+  x.split(", ");
+} else if (typeof x === "number") {
+  // x is a number here
+  x.toFixed(2);
+} else {
+  // x is a never here
+}
+```
+-- If you've done your typing correctly, x would be a never on reaching line 155. 
+Note that you're not going to be *creating* values of type never, but this is an
+example of where you might expect to see one. 
+- Never's inability to hold a value can be used to our advantage. 
+-- "The only thing that can type check against that never argument is a value of
+type never."
+-- In the below example, we utilize `never` to "create exhaustive conditionals
+and switches." EX:
+```ts
+class UnreachableError extends Error {
+  constructor(val: never, message: string) {
+    super(`TypeScript thought we could never end up here\n${message}`);
+  }
+}
+
+let y = 4 as string | number;
+
+if (typeof y === "string") {
+  // y is a string here
+  y.split(", ");
+} else if (typeof y === "number") {
+  // y is a number here
+  y.toFixed(2);
+} else {
+  throw new UnreachableError(y, "y should be a string or number");
+}
+```
+
