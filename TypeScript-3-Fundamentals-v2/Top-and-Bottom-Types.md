@@ -64,3 +64,70 @@ if (isHasEmail(myUnknown)) {
   console.log(myUnknown.name, myUnknown.email);
 }
 ```
+
+# Unknowns & Branded Types
+- Dealing with multiple unknowns
+-- We kind of lose some of the benefits of structural typing when using 
+`unknown`. Look how we can get mixed up below: 
+```ts
+let aa: unknown = 41;
+let bb: unknown = ["a", "string", "array"];
+bb = aa;
+```
+TS doesn't see an error with the above code snippet, even though `aa` is
+a number and `bb` is an array. Technically speaking, both of them are 
+unknown types. 
+-- Working with unknowns is almost like working through opaque glass, in
+that we can't see into it but it can hold whatever it wants. "It's very easy
+to get a couple sort of different opaque values mixed up and interchanged with
+each other." 
+- Alternative to unknowns: Branded Types
+-- "One thing we can do to avoid this is to create types with structures that are
+difficult to accidentally match. This involves unsafe casting, but it's ok if we
+do things carefully." 
+-- In TS, casting is when you're forcing a value to become a particular type. This
+is an unsafe practice, and is typically not recommended. 
+-- EX: 
+```ts
+/* two branded types, each with "brand" and "unbrand" functions */
+interface BrandedA {
+  __this_is_branded_with_a: "a";
+}
+function brandA(value: string): BrandedA {
+  return (value as unknown) as BrandedA;
+}
+function unbrandA(value: BrandedA): string {
+  return (value as unknown) as string;
+}
+
+interface BrandedB {
+  __this_is_branded_with_b: "b";
+}
+function brandB(value: { abc: string }): BrandedB {
+  return (value as unknown) as BrandedB;
+}
+function unbrandB(value: BrandedB): { abc: string } {
+  return (value as unknown) as { abc: string };
+}
+
+let secretA = brandA("This is a secret value");
+let secretB = brandB({ abc: "This is a different secret value" });
+
+// Unlike with unknowns, TS won't let these two get mixed up and intertwined.
+// secretA and secretB are two distinct variables. 
+// secretA = secretB; // ✅ No chance of getting these mixed up
+// unbrandB(secretA);
+// unbrandA(secretB);
+
+// To retrieve our original values
+let revealedA = unbrandA(secretA);
+let revealedB = unbrandB(secretB);
+```
+-- As far as use cases go, this is great for keeping people from knowing what
+types are used in a certain area or on certain objects. It's not meant to be 
+used as a security feature, just as a difficult piece to unwind. This is meant
+to discourage people, draw a clear line in the sand. 
+-- The other tip Mike gives with branding/unbranding is that it should all be 
+done in one place. Don't brand in multiple areas, unbrand in multiple other areas.
+Keep it all collected, concise, and consistent. You'll thank yourself later. 
+
