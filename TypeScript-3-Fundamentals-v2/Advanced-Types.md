@@ -58,3 +58,59 @@ let a: EventualType<Promise<number>>;
 let b: EventualType<number[]>;
 ```
 
+# Built-in Utility Types
+- Utility Types are meant to facilitate common type transformations, and are
+- available globally. 
+-- The utility types Mike introduces are `partial`, `pick`, `extract`, `exclude`,
+and `record`. The TS Docs include a list of around 21 utility types. Link:
+https://www.typescriptlang.org/docs/handbook/utility-types.html
+- *Partial* allows us to make all properties on an object optional. 
+-- This is great if someone only gives you a subset of the properties available
+on an object. For example, a case in which a user may not have an email: 
+
+```ts
+type MayHaveEmail = Partial<HasEmail>;
+const me: MayHaveEmail = {}; // everything is optional
+```
+
+- *Pick* allows us to select one or more properties off of something. 
+-- In using `pick`, you're *picking* property types off of an object tree. You
+are selecting what is or isn't available in a given circumstance. EX: 
+```ts 
+type HasThen<T> = Pick<Promise<T>, "then" | "catch">;
+
+let hasThen: HasThen<number> = Promise.resolve(4);
+hasThen.then; // hasThen would only have access to "then" or "catch"
+```
+
+- *Extract* lets us obtain a subset of available types. 
+-- When you have a big intersection type, extract lets you select things that
+are assignable to a particular type. 
+```ts
+type OnlyNumbers = Extract<"a" | "b" | 1 | 2, number>;
+```
+
+- *Exclude* lets us obtain a subset of types that are NOT available.
+-- `Exclude` functions very much as the inverse to `extract`.
+
+- *Record* helps us create a type with specified property keys and the same type.
+-- TS Docs: Constructs an object type whose property keys are Keys and whose 
+property values are Type. This utility can be used to map the properties of a 
+type to another type. EX: 
+```ts
+interface CatInfo {
+  age: number;
+  breed: string;
+}
+
+type CatName = "miffy" | "boris" | "mordred";
+
+const cats: Record<CatName, CatInfo> = {
+  miffy: { age: 10, breed: "Persian" },
+  boris: { age: 5, breed: "Maine Coon" },
+  mordred: { age: 16, breed: "British Shorthair" },
+};
+
+cats.boris;
+// ^ = const cats: Record<CatName, CatInfo>
+```
