@@ -95,3 +95,39 @@ let alValue = Album; // value test
 // occupies all three spaces! (Type, value, namespace!)
 export { Album };
 ```
+
+- Namespaces have their own slot, and are also values.
+-- A namespace serves to "tack things onto" a class. In the below example, we 
+utilize a namespace (ab) to attach `ABContact` to `AddressBook`. 
+-- Note: namespaces can be merged with classes. EX: 
+```ts
+class AddressBook {
+  contacts!: Contact[];
+}
+namespace AddressBook {
+  export class ABContact extends Contact {} // inner class
+}
+
+const ab = new AddressBook();
+ab.contacts.push(new AddressBook.ABContact());
+```
+... or merged with functions. EX: 
+
+```ts
+function format(amt: number) {
+  return `${format.currency}${amt.toFixed(2)}`;
+}
+namespace format {
+  export const currency: string = "$ ";
+}
+
+format(2.314); // $ 2.31
+format.currency; // $
+```
+
+
+-- Takeaway: knowing what's a type and knowing what's a value will take you a 
+long way. And knowing what can be augmented (interfaces), versus knowing what
+you have to leave alone when they're defined in types (values). Once you have 
+a value, you can't overwrite that. That's not the way that JS behaves. Remind
+yourself that an interface can be modified, though. 
